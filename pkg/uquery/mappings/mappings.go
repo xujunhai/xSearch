@@ -107,7 +107,13 @@ func Request(analyzers map[string]*analysis.Analyzer, data map[string]interface{
 			newProp = meta.NewProperty("bool")
 		case "time", "datetime":
 			newProp = meta.NewProperty("date")
-		case "flattened", "object", "nested", "wildcard", "byte", "alias", "geo_point", "ip", "ip_range", "scaled_float":
+		case meta.TypeGeoPoint:
+			newProp = meta.NewProperty(meta.TypeGeoPoint)
+		case meta.TypeObject:
+			//newProp = meta.NewProperty(meta.TypeObject)
+		case meta.TypeNested:
+			//newProp = meta.NewProperty(meta.TypeObject)
+		case "flattened","wildcard", "byte", "alias", "ip", "ip_range", "scaled_float":
 			// ignore
 		default:
 			return nil, errors.New(errors.ErrorTypeXContentParseException, fmt.Sprintf("[mappings] properties [%s] doesn't support type [%s]", field, propTypeStr))
@@ -181,7 +187,7 @@ func Request(analyzers map[string]*analysis.Analyzer, data map[string]interface{
 	return mappings, nil
 }
 
-// convertToField converst v to type map[string]meta.Property.
+// convertToField convert v to type map[string]meta.Property.
 func convertToField(v map[string]interface{}) (map[string]meta.Property, error) {
 	r := make(map[string]meta.Property)
 

@@ -72,8 +72,8 @@ type IndexSecondShard struct {
 
 // GetShardByDocID return the shard by hash docID
 func (index *Index) GetShardByDocID(docID string) *IndexShard {
-	shardKey := index.shardHashing.Lookup(docID)
-	return index.shards[shardKey]
+	shardNode := index.shardHashing.Lookup(docID)
+	return index.shards[shardNode]
 }
 
 // CheckShards check all shards status if need create new second layer shard
@@ -203,7 +203,7 @@ func (s *IndexShard) GetReaders(timeMin, timeMax int64) ([]*bluge.Reader, error)
 	rs := make([]*bluge.Reader, 0, 1)
 	chs := make(chan *bluge.Reader, s.GetShardNum())
 	eg := errgroup.Group{}
-	eg.SetLimit(config.Global.Shard.GorutineNum)
+	eg.SetLimit(config.Global.Shard.GoroutineNum)
 	for i := s.GetLatestShardID(); i >= 0; i-- {
 		i := i
 		s.lock.RLock()
@@ -319,7 +319,7 @@ func (s *IndexShard) FindShardByDocID(docID string) (int64, error) {
 	}
 
 	eg, ctx := errgroup.WithContext(ctx)
-	eg.SetLimit(config.Global.Shard.GorutineNum)
+	eg.SetLimit(config.Global.Shard.GoroutineNum)
 	for id := int64(len(writers)) - 1; id >= 0; id-- {
 		id := id
 		w := writers[id]

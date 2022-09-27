@@ -29,3 +29,13 @@ const (
 	ActionTypeUpdate = "update"
 	ActionTypeDelete = "delete"
 )
+
+// Field type
+const (
+	TypeKeyword = "keyword"
+	TypeText = "text"
+	TypeNumeric = "numeric"
+	TypeGeoPoint = "geo_point"
+	TypeObject = "object"
+	TypeNested = "nested"
+)

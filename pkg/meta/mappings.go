@@ -23,7 +23,7 @@ import (
 )
 
 type Mappings struct {
-	Properties map[string]Property `json:"properties,omitempty"`
+	Properties map[string]Property `json:"properties,omitempty"` //fieldName => Property
 	lock       sync.RWMutex
 }
 

@@ -18,6 +18,7 @@ package zutils
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func ToString(v interface{}) (string, error) {
@@ -125,4 +126,36 @@ func ToBool(v interface{}) (bool, error) {
 	default:
 		return false, fmt.Errorf("ToInt: unknown supported type %T", v)
 	}
+}
+
+// ToGeoPoint geo_point string with the format: "lat,lon".
+func ToGeoPoint(v interface{}) ([]float64, error) {
+	geoStr, err := ToString(v)
+	if err != nil {
+		return nil, err
+	}
+	geoStrSlice := strings.Split(geoStr, ",")
+	if len(geoStrSlice) != 2 {
+		return nil, fmt.Errorf("geo_point str must be lat,lon format")
+	}
+
+	geoPoint := make([]float64, 2)
+	lat, err := strconv.ParseFloat(geoStrSlice[0], 64)
+	if err != nil {
+		return nil, fmt.Errorf("geo_point lat can't convert float64 type,value %T", geoStrSlice[0])
+	}
+	if !(lat >= -90 && lat <= 90.0) {
+		return nil, fmt.Errorf("geo_point lat must between -90.0 and 90.0,vale %f", lat)
+	}
+	geoPoint[0] = lat
+
+	lon, err := strconv.ParseFloat(geoStrSlice[1], 64)
+	if err != nil {
+		return nil, fmt.Errorf("geo_point lon can't convert float64 type,value %T", geoStrSlice[1])
+	}
+	if !(lon >= -180.0 && lat <= 180.0) {
+		return nil, fmt.Errorf("geo_point lat must between -180.0 and 180.0,vale %f", lon)
+	}
+	geoPoint[1] = lon
+	return geoPoint, nil
 }

@@ -25,7 +25,7 @@ import (
 )
 
 type Log struct {
-	name string
+	name string  //index/shardId
 	log  *wal.Log
 	Redo *redo.Log
 }

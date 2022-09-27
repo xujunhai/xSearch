@@ -70,8 +70,8 @@ type shard struct {
 	Num int64 `env:"ZINC_SHARD_NUM,default=3"`
 	// MaxSize is the maximum size limit for one shard, or will create a new shard.
 	MaxSize uint64 `env:"ZINC_SHARD_MAX_SIZE,default=1073741824"`
-	// control gorutine number for read
-	GorutineNum int `env:"ZINC_SHARD_GORUTINE_NUM,default=10"`
+	// control goroutine number for read
+	GoroutineNum int `env:"ZINC_SHARD_GOROUTINE_NUM,default=10"`
 }
 
 type etcd struct {

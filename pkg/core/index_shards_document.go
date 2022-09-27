@@ -127,6 +127,12 @@ func (s *IndexShard) buildField(mappings *meta.Mappings, bdoc *bluge.Document, k
 			return fmt.Errorf("field [%s] value [%v] parse err: %s", key, value, err.Error())
 		}
 		field = bluge.NewDateTimeField(key, v)
+	case meta.TypeGeoPoint:
+		v,err := zutils.ToGeoPoint(value)
+		if err != nil {
+			return fmt.Errorf("field [%s] value [%v] parse err: %s", key, value, err.Error())
+		}
+		field = bluge.NewGeoPointField(key,v[1],v[0])
 	}
 	if prop.Store || prop.Highlightable {
 		field.StoreValue()
@@ -319,6 +325,11 @@ func (s *IndexShard) checkField(mappings *meta.Mappings, data map[string]interfa
 			return fmt.Errorf("field [%s] value [%v] parse err: %s", key, value, err.Error())
 		}
 		v = value
+	case meta.TypeGeoPoint:
+		_,err = zutils.ToGeoPoint(value)
+		if err != nil {
+			return fmt.Errorf("field [%s] value [%v] parse err: %s", key, value, err.Error())
+		}
 	}
 	if array {
 		sub := data[key].([]interface{})

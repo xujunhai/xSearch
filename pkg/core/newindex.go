@@ -79,12 +79,13 @@ func NewIndex(name, storageType string, shardNum int64) (*Index, error) {
 	index.shardNum = shardNum
 	index.ref.ShardNum = shardNum
 	index.ref.Shards = make(map[string]*meta.IndexShard, index.shardNum)
+	//init index.meta.Shards
 	for i := int64(0); i < index.shardNum; i++ {
 		node, err := ider.NewNode(int(i))
 		if err != nil {
 			return nil, err
 		}
-		id := node.Generate()
+		id := node.Generate() //node id
 		shard := &meta.IndexShard{ID: id, ShardNum: 1}
 		for j := int64(0); j < shard.ShardNum; j++ {
 			shard.Shards = append(shard.Shards, &meta.IndexSecondShard{ID: j})

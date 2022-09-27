@@ -16,29 +16,28 @@
 package routes
 
 import (
-	"net/http"
 	"strings"
 
 	"github.com/zinclabs/zinc/pkg/core"
 
 	"github.com/gin-gonic/gin"
-	"github.com/zinclabs/zinc/pkg/auth"
 )
 
 func AuthMiddleware(c *gin.Context) {
 	// Get the Basic Authentication credentials
-	user, password, hasAuth := c.Request.BasicAuth()
-	if hasAuth {
-		if _, ok := auth.VerifyCredentials(user, password); ok {
-			c.Next()
-		} else {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"auth": "Invalid credentials"})
-			return
-		}
-	} else {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"auth": "Missing credentials"})
-		return
-	}
+	//user, password, hasAuth := c.Request.BasicAuth()
+	//if hasAuth {
+	//	if _, ok := auth.VerifyCredentials(user, password); ok {
+	//		c.Next()
+	//	} else {
+	//		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"auth": "Invalid credentials"})
+	//		return
+	//	}
+	//} else {
+	//	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"auth": "Missing credentials"})
+	//	return
+	//}
+	c.Next()
 }
 
 func ESMiddleware(c *gin.Context) {
