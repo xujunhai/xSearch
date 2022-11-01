@@ -1,8 +1,9 @@
-// +build appengine
+//go:build !fips
+// +build !fips
 
 /*
- *
- * Copyright 2018 gRPC authors.
+ * MinIO Go Library for Amazon S3 Compatible Cloud Storage
+ * Copyright 2022 MinIO, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +16,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package credentials
+package encrypt
 
-import (
-	"net"
-)
-
-// WrapSyscallConn returns newConn on appengine.
-func WrapSyscallConn(rawConn, newConn net.Conn) net.Conn {
-	return newConn
-}
+// FIPS is true if 'fips' build tag was specified.
+const FIPS = false

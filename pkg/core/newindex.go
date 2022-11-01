@@ -129,12 +129,14 @@ func getOpenConfig(name string, storageType string, defaultSearchAnalyzer *analy
 	var dataPath string
 	var cfg bluge.Config
 	switch storageType {
-	case "s3":
+	case directory.DirS3:
 		dataPath = config.Global.S3.Bucket
 		cfg = directory.GetS3Config(dataPath, name, timeRange...)
-	case "minio":
+	case directory.DirMinio:
 		dataPath = config.Global.MinIO.Bucket
 		cfg = directory.GetMinIOConfig(dataPath, name, timeRange...)
+	case directory.DirMemory:
+		cfg = directory.GetMemoryConfig(dataPath, name, timeRange...)
 	default:
 		dataPath = config.Global.DataPath
 		cfg = directory.GetDiskConfig(dataPath, name, timeRange...)

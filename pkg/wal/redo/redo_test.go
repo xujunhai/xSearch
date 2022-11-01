@@ -105,6 +105,7 @@ func TestLog(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tt.args.data, got)
+				t.Log("got",string(got))
 			}
 		})
 	}

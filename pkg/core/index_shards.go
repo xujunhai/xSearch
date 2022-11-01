@@ -46,7 +46,7 @@ const (
 // First layer shard just used for distribute not really store documents.
 type IndexShard struct {
 	open   uint64
-	name   string // shard name: index/shardID
+	name   string // shard name: indexName/shardID
 	root   *Index
 	ref    *meta.IndexShard
 	shards []*IndexSecondShard

@@ -29,7 +29,7 @@ func (index *Index) CreateDocument(docID string, doc map[string]interface{}, upd
 	// metrics
 	IncrMetricStatsByIndex(index.GetName(), "wal_request")
 
-	// check WAL
+	// check WAL 根据文档ID Hash算法 获取分片
 	shard := index.GetShardByDocID(docID)
 	if err := shard.OpenWAL(); err != nil {
 		return err
