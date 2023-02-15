@@ -213,7 +213,8 @@ definitions:
       histogram:
         $ref: '#/definitions/meta.AggregationHistogram'
       ip_range:
-        $ref: '#/definitions/meta.AggregationIPRange'
+        allOf:
+        - $ref: '#/definitions/meta.AggregationIPRange'
         description: 'TODO: not implemented'
       max:
         $ref: '#/definitions/meta.AggregationMetric'
@@ -678,10 +679,12 @@ definitions:
   meta.QueryForSDK:
     properties:
       bool:
-        $ref: '#/definitions/meta.BoolQueryForSDK'
+        allOf:
+        - $ref: '#/definitions/meta.BoolQueryForSDK'
         description: .
       exists:
-        $ref: '#/definitions/meta.ExistsQuery'
+        allOf:
+        - $ref: '#/definitions/meta.ExistsQuery'
         description: .
       fuzzy:
         additionalProperties:
@@ -689,7 +692,8 @@ definitions:
         description: simple, PrefixQuery
         type: object
       ids:
-        $ref: '#/definitions/meta.IdsQuery'
+        allOf:
+        - $ref: '#/definitions/meta.IdsQuery'
         description: .
       match:
         additionalProperties:
@@ -697,7 +701,8 @@ definitions:
         description: simple, MatchQuery
         type: object
       match_all:
-        $ref: '#/definitions/meta.MatchAllQuery'
+        allOf:
+        - $ref: '#/definitions/meta.MatchAllQuery'
         description: just set or null
       match_bool_prefix:
         additionalProperties:
@@ -705,7 +710,8 @@ definitions:
         description: simple, MatchBoolPrefixQuery
         type: object
       match_none:
-        $ref: '#/definitions/meta.MatchNoneQuery'
+        allOf:
+        - $ref: '#/definitions/meta.MatchNoneQuery'
         description: just set or null
       match_phrase:
         additionalProperties:
@@ -718,7 +724,8 @@ definitions:
         description: simple, MatchPhrasePrefixQuery
         type: object
       multi_match:
-        $ref: '#/definitions/meta.MultiMatchQuery'
+        allOf:
+        - $ref: '#/definitions/meta.MultiMatchQuery'
         description: .
       prefix:
         additionalProperties:
@@ -726,7 +733,8 @@ definitions:
         description: .
         type: object
       query_string:
-        $ref: '#/definitions/meta.QueryStringQuery'
+        allOf:
+        - $ref: '#/definitions/meta.QueryStringQuery'
         description: .
       range:
         additionalProperties:
@@ -739,7 +747,8 @@ definitions:
         description: simple, FuzzyQuery
         type: object
       simple_query_string:
-        $ref: '#/definitions/meta.SimpleQueryStringQuery'
+        allOf:
+        - $ref: '#/definitions/meta.SimpleQueryStringQuery'
         description: .
       term:
         additionalProperties:
@@ -1072,7 +1081,6 @@ definitions:
           type: string
         type: array
     type: object
-host: localhost:4080
 info:
   contact:
     name: Zinc Search
@@ -1108,6 +1116,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Analyze
       tags:
       - Index
@@ -1134,6 +1144,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Bulk documents
       tags:
       - Document
@@ -1164,6 +1176,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Bulkv2 documents
       tags:
       - Document
@@ -1195,6 +1209,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Analyze
       tags:
       - Index
@@ -1231,6 +1247,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create or update document
       tags:
       - Document
@@ -1263,7 +1281,51 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Delete document
+      tags:
+      - Document
+    get:
+      consumes:
+      - application/json
+      operationId: GetDocument
+      parameters:
+      - description: Index
+        in: path
+        name: index
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Document
+        in: body
+        name: document
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/meta.Hit'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/meta.HTTPResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
+      summary: get document with id
       tags:
       - Document
     put:
@@ -1303,6 +1365,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create or update document with id
       tags:
       - Document
@@ -1327,6 +1391,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Get index mappings
       tags:
       - Index
@@ -1361,6 +1427,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Set index mappings
       tags:
       - Index
@@ -1396,6 +1464,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Multi documents
       tags:
       - Document
@@ -1427,6 +1497,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Search V1
       tags:
       - Search
@@ -1451,6 +1523,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Get index settings
       tags:
       - Index
@@ -1485,6 +1559,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Set index Settings
       tags:
       - Index
@@ -1526,6 +1602,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Update document with id
       tags:
       - Document
@@ -1560,6 +1638,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/index.IndexListResponse'
+      security:
+      - BasicAuth: []
       summary: List indexes
       tags:
       - Index
@@ -1585,6 +1665,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create index
       tags:
       - Index
@@ -1612,6 +1694,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Delete index
       tags:
       - Index
@@ -1634,6 +1718,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Get index metadata
       tags:
       - Index
@@ -1656,6 +1742,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/meta.HTTPResponse'
+      security:
+      - BasicAuth: []
       summary: Checks if the index exists
       tags:
       - Index
@@ -1679,6 +1767,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Resfresh index
       tags:
       - Index
@@ -1699,6 +1789,8 @@ paths:
             items:
               type: string
             type: array
+      security:
+      - BasicAuth: []
       summary: List index Name
       tags:
       - Index
@@ -1744,6 +1836,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: List permissions
       tags:
       - Permission
@@ -1763,6 +1857,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: List role
       tags:
       - Role
@@ -1792,6 +1888,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create role
       tags:
       - Role
@@ -1815,6 +1913,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Delete role
       tags:
       - Role
@@ -1834,6 +1934,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: List user
       tags:
       - User
@@ -1863,6 +1965,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create user
       tags:
       - User
@@ -1892,6 +1996,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Update user
       tags:
       - User
@@ -1915,6 +2021,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Delete user
       tags:
       - User
@@ -1933,6 +2041,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Add or remove index alias for compatible ES
       tags:
       - Index
@@ -1960,6 +2070,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: ES bulk documents
       tags:
       - Document
@@ -1979,6 +2091,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: List index teplates
       tags:
       - Index
@@ -2004,6 +2118,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create update index template
       tags:
       - Index
@@ -2027,6 +2143,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Delete template
       tags:
       - Index
@@ -2049,6 +2167,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Get index template
       tags:
       - Index
@@ -2079,6 +2199,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Create update index template
       tags:
       - Index
@@ -2105,6 +2227,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Search V2 MultipleSearch for compatible ES
       tags:
       - Search
@@ -2128,6 +2252,8 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/meta.HTTPResponse'
+      security:
+      - BasicAuth: []
       summary: Checks if the index exists for compatible ES
       tags:
       - Index
@@ -2157,6 +2283,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponse'
+      security:
+      - BasicAuth: []
       summary: Create index for compatible ES
       tags:
       - Index
@@ -2188,6 +2316,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Searches the index and deletes all matched documents
       tags:
       - Search
@@ -2212,6 +2342,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponse'
+      security:
+      - BasicAuth: []
       summary: Get index mappings for compatible ES
       tags:
       - Index
@@ -2243,6 +2375,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Search V2 DSL for compatible ES
       tags:
       - Search
@@ -2270,6 +2404,8 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/meta.HTTPResponseError'
+      security:
+      - BasicAuth: []
       summary: Get index alias for compatible ES
       tags:
       - Index

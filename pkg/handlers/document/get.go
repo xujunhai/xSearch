@@ -22,37 +22,42 @@ import (
 
 	"github.com/zinclabs/zinc/pkg/core"
 	"github.com/zinclabs/zinc/pkg/meta"
+	"github.com/zinclabs/zinc/pkg/zutils"
 )
 
-// @Id DeleteDocument
-// @Summary Delete document
+// @Id GetDocument
+// @Summary get document with id
 // @security BasicAuth
 // @Tags    Document
+// @Accept  json
 // @Produce json
 // @Param   index  path  string  true  "Index"
 // @Param   id     path  string  true  "ID"
-// @Success 200 {object} meta.HTTPResponseDocument
+// @Param   document  body  map[string]interface{}  true  "Document"
+// @Success 200 {object} meta.Hit
 // @Failure 400 {object} meta.HTTPResponseError
 // @Failure 500 {object} meta.HTTPResponseError
-// @Router /api/{index}/_doc/{id} [delete]
-func Delete(c *gin.Context) {
-	docID := c.Param("id")
-	if docID == "" {
-		c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: "id is empty"})
-		return
-	}
-
+// @Router /api/{index}/_doc/{id} [get]
+func Get(c *gin.Context) {
 	indexName := c.Param("target")
-	index, exists := core.GetIndex(indexName)
-	if !exists {
-		c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: "index does not exists"})
+	docID := c.Param("id")
+
+	if docID == "" {
+		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: "id is empty"})
 		return
 	}
 
-	err := index.DeleteDocument(docID)
+	// If the index does not exist, then create it
+	index, _, err := core.GetOrCreateIndex(indexName, "", 0)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
+		zutils.GinRenderJSON(c, http.StatusInternalServerError, meta.HTTPResponseError{Error: err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, meta.HTTPResponseDocument{Message: "deleted", Index: indexName, ID: docID})
+
+	source, err := index.GetDocument(docID)
+	if err != nil {
+		zutils.GinRenderJSON(c, http.StatusBadRequest, meta.HTTPResponseError{Error: err.Error()})
+		return
+	}
+	zutils.GinRenderJSON(c, http.StatusOK, source)
 }
